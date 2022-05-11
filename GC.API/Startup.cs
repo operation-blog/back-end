@@ -1,4 +1,3 @@
-using GF.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +12,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GC.BLL.Abstractions;
+using GC.BLL.Services;
+using GF.DAL;
+using GF.DAL.Abstractions;
+using GF.DAL.Entities;
+using GF.DAL.Repositories;
+using AutoMapper;
+using GC.API.Mappings;
 
 namespace GC.API
 {
@@ -33,6 +40,15 @@ namespace GC.API
                 options.UseSqlServer(Configuration["Database:ConnectionString"]);
                 options.UseLazyLoadingProxies();
             });
+
+            services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+            services.AddScoped<IUserService, UserService>();
+
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+
+            services.AddSingleton(mapper);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
