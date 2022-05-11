@@ -18,5 +18,7 @@ namespace GF.DAL
         }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<AccessToken> AccessTokens { get; set; }
     }
 }

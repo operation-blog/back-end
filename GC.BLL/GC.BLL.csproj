@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GC.DTO\GC.DTO.csproj" />
     <ProjectReference Include="..\GF.DAL\GF.DAL.csproj" />
   </ItemGroup>
 

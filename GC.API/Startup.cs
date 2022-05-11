@@ -45,6 +45,9 @@ namespace GC.API
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
             services.AddScoped<IUserService, UserService>();
 
+            services.AddScoped<IGenericRepository<AccessToken>, GenericRepository<AccessToken>>();
+            services.AddScoped<IAccessTokenService, AccessTokenService>();
+
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
 
             IMapper mapper = mapperConfig.CreateMapper();

@@ -14,6 +14,9 @@ namespace GC.API.Mappings
         {
             CreateMap<User, UserResponseDTO>();
             CreateMap<UserResponseDTO, User>();
+
+            CreateMap<AccessToken, TokenResponseDTO>();
+            CreateMap<TokenResponseDTO, AccessToken>();
         }
     }
 }
