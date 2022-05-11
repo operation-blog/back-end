@@ -12,5 +12,9 @@ namespace GC.BLL.Abstractions
         Task<IEnumerable<User>> GetAll();
 
         Task<User> GetById(int id);
+
+        Task<bool> UserExist(string username);
+
+        Task<User> GetUserByDetails(string username, string password);
     }
 }

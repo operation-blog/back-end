@@ -27,5 +27,27 @@ namespace GC.BLL.Services
         {
             return await _userRepository.GetById(id);
         }
+
+        public async Task<bool> UserExist(string username)
+        {
+            var users = await GetAll();
+
+            foreach (var user in users)
+                if (user.Username == username)
+                    return true;
+
+            return false;
+        }
+
+        public async Task<User> GetUserByDetails(string username, string password)
+        {
+            var users = await GetAll();
+
+            foreach (var user in users)
+                if (user.Username == username && user.Password == password)
+                    return user;
+
+            return null;
+        }
     }
 }
