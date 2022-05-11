@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using GF.DAL.Entities;
 
 namespace GC.API.Controllers
 {
@@ -32,13 +33,22 @@ namespace GC.API.Controllers
         [HttpGet("Ping")]
         public string Ping() { return "OK"; }
 
-        [Authorize]
-        [HttpGet]
+        [Authorize(Role.Admin)]
+        [HttpGet("All")]
         public async Task<IEnumerable<UserResponseDTO>> GetAll()
         {
             var userResponse = await _userService.GetAll();
 
             return _mapper.Map<List<UserResponseDTO>>(userResponse);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public UserResponseDTO GetCurrentUser()
+        {
+            var user = (User)HttpContext.Items["User"];
+
+            return _mapper.Map<UserResponseDTO>(user);
         }
 
         [HttpPost("Login")]
@@ -54,7 +64,7 @@ namespace GC.API.Controllers
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.ID.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.ID.ToString()), new Claim("role", user.Role.ToString()) }),
 
                 Expires = DateTime.UtcNow.AddDays(1),
 
@@ -63,7 +73,7 @@ namespace GC.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new { status = 1, username = loginData.Username, token = tokenHandler.WriteToken(token) });
+            return Ok(new { status = 1, username = loginData.Username, role = user.Role, token = tokenHandler.WriteToken(token) });
         }
     }
 }
