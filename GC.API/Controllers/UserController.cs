@@ -20,12 +20,14 @@ namespace GC.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAccessTokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public UserController(IUserService userService, IMapper mapper, IConfiguration configuration)
+        public UserController(IUserService userService, IAccessTokenService tokenService,  IMapper mapper, IConfiguration configuration)
         {
             _userService = userService;
+            _tokenService = tokenService;
             _mapper = mapper;
             _configuration = configuration;
         }
@@ -74,6 +76,24 @@ namespace GC.API.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return Ok(new { status = 1, username = loginData.Username, role = user.Role, token = tokenHandler.WriteToken(token) });
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] UserRegisterRequestDTO registerData)
+        {
+            var token = await _tokenService.TokenExist(registerData.Token);
+
+            if (token == null)
+                return BadRequest(new { status = 0, message = "Invalid Token" });
+
+            var user = await _userService.CreateUser(registerData.Username, registerData.Password);
+
+            if (user == null)
+                return BadRequest(new { status = 0, message = "Name Already Exist" });
+
+            await _tokenService.MarkTokenUsed(token, user);
+
+            return Ok(new { status = 1, message = "Account Created" });
         }
     }
 }

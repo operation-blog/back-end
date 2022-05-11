@@ -39,6 +39,24 @@ namespace GC.BLL.Services
             return false;
         }
 
+        public async Task<User> CreateUser(string username, string password)
+        {
+            var nameExist = await UserExist(username);
+
+            if (nameExist)
+                return null;
+
+            User user = new User();
+
+            user.Username = username;
+            user.Password = password;
+
+            _userRepository.Insert(user);
+            await _userRepository.Save();
+
+            return user;
+        }
+
         public async Task<User> GetUserByDetails(string username, string password)
         {
             var users = await GetAll();

@@ -15,6 +15,8 @@ namespace GC.BLL.Abstractions
 
         Task<bool> UserExist(string username);
 
+        Task<User> CreateUser(string username, string password);
+
         Task<User> GetUserByDetails(string username, string password);
     }
 }

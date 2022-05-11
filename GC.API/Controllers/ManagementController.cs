@@ -5,12 +5,6 @@ using System.Threading.Tasks;
 using GC.BLL.Abstractions;
 using GC.DTO.Responses;
 using AutoMapper;
-using GC.DTO.Requests;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using Microsoft.Extensions.Configuration;
 using GF.DAL.Entities;
 
 namespace GC.API.Controllers

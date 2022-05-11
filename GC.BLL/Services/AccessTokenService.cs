@@ -44,5 +44,24 @@ namespace GC.BLL.Services
         {
             return await _accessTokenRepository.GetAll();
         }
+
+        public async Task<AccessToken> TokenExist(string token)
+        {
+            var tokens = await GetAll();
+
+            foreach (var rToken in tokens)
+                if (rToken.Token == token && rToken.Used == false)
+                    return rToken;
+
+            return null;
+        }
+
+        public async Task MarkTokenUsed(AccessToken token, User user)
+        {
+            token.Used = true;
+            token.UsedBy = user;
+
+            await _accessTokenRepository.Save();
+        }
     }
 }
