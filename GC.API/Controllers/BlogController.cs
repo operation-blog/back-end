@@ -24,7 +24,7 @@ namespace GC.API.Controllers
             _blogService = blogService;
             _mapper = mapper;
         }
-
+        
         [HttpPost("Create")]
         public async Task<IActionResult> Create(BlogRequestDTO blogData)
         {
@@ -54,10 +54,12 @@ namespace GC.API.Controllers
         {
             var user = (User)HttpContext.Items["User"];
 
-            if (await _blogService.GetById(blogID) == null)
+            var blog = await _blogService.GetById(blogID);
+
+            if (blog == null)
                 return BadRequest(new { status = 0, message = "Blog Doesn't Exist" });
 
-            if (!user.Blogs.Select(y => y.BlogId).Contains(blogID))
+            if (!blog.Authors.Select(y => y.UserId).Contains(user.ID))
                 return BadRequest(new { status = 0, message = "Current User Doesn't Own This Blog" });
 
             await _blogService.DeleteBlog(blogID);

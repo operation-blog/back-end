@@ -13,10 +13,8 @@ namespace GC.API.Mappings
         public MappingProfile()
         {
             CreateMap<User, UserResponseDTO>();
-            CreateMap<UserResponseDTO, User>();
 
             CreateMap<AccessToken, TokenResponseDTO>();
-            CreateMap<TokenResponseDTO, AccessToken>();
 
             CreateMap<Blog, BlogResponseDTO>().ForMember(dto => dto.Authors, opt => opt.MapFrom(x => x.Authors.Select(y => y.User).ToList()));
         }
