@@ -12,5 +12,9 @@ namespace GC.BLL.Abstractions
         Task<Blog> CreateBlog(int[] creators, string title);
 
         Task<IEnumerable<Blog>> GetAll();
+
+        Task DeleteBlog(int blogID);
+
+        Task<Blog> GetById(int id);
     }
 }

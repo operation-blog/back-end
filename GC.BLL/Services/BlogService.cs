@@ -20,6 +20,11 @@ namespace GC.BLL.Services
             _userRepository = userRepository;
         }
 
+        public async Task<Blog> GetById(int id)
+        {
+            return await _blogRepository.GetById(id);
+        }
+
         public async Task<Blog> CreateBlog(int[] creators, string title)
         {
             Blog blog = new Blog();
@@ -51,6 +56,15 @@ namespace GC.BLL.Services
         public async Task<IEnumerable<Blog>> GetAll()
         {
             return await _blogRepository.GetAll();
+        }
+
+        public async Task DeleteBlog(int blogID)
+        {
+            var blog = await GetById(blogID);
+
+            _blogRepository.Delete(blog);
+
+            await _blogRepository.Save();
         }
     }
 }

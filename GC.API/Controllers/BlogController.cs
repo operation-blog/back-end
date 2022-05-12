@@ -48,5 +48,21 @@ namespace GC.API.Controllers
 
             return _mapper.Map<List<BlogResponseDTO>>(blogs);
         }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete(int blogID)
+        {
+            var user = (User)HttpContext.Items["User"];
+
+            if (await _blogService.GetById(blogID) == null)
+                return BadRequest(new { status = 0, message = "Blog Doesn't Exist" });
+
+            if (!user.Blogs.Select(y => y.BlogId).Contains(blogID))
+                return BadRequest(new { status = 0, message = "Current User Doesn't Own This Blog" });
+
+            await _blogService.DeleteBlog(blogID);
+
+            return Ok(new { status = 1, message = "Blog Deleted" });
+        }
     }
 }
