@@ -18,5 +18,7 @@ namespace GF.DAL.Entities
 
         [DefaultValue(Role.User)]
         public Role Role { get; set; }
+
+        public virtual ICollection<BlogUser> Blogs { get; set; }
     }
 }

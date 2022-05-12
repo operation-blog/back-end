@@ -44,7 +44,9 @@ namespace GC.API
 
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBlogService, BlogService>();
 
+            services.AddScoped<IGenericRepository<Blog>, GenericRepository<Blog>>();
             services.AddScoped<IGenericRepository<AccessToken>, GenericRepository<AccessToken>>();
             services.AddScoped<IAccessTokenService, AccessTokenService>();
 

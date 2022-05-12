@@ -4,14 +4,16 @@ using GF.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GF.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220512112903_Blogs-Fix")]
+    partial class BlogsFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,15 +68,15 @@ namespace GF.DAL.Migrations
 
             modelBuilder.Entity("GF.DAL.Entities.BlogUser", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("BlogId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "BlogId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("BlogId");
+                    b.HasKey("BlogId", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("BlogUsers");
                 });
@@ -121,7 +123,7 @@ namespace GF.DAL.Migrations
                 {
                     b.HasOne("GF.DAL.Entities.Blog", "Blog")
                         .WithMany("Authors")
-                        .HasForeignKey("BlogId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -4,20 +4,37 @@ using GF.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GF.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220512112057_Blogs")]
+    partial class Blogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.16")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("BlogUser", b =>
+                {
+                    b.Property<int>("AuthorsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BlogsID")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthorsID", "BlogsID");
+
+                    b.HasIndex("BlogsID");
+
+                    b.ToTable("BlogUser");
+                });
 
             modelBuilder.Entity("GF.DAL.Entities.AccessToken", b =>
                 {
@@ -66,17 +83,24 @@ namespace GF.DAL.Migrations
 
             modelBuilder.Entity("GF.DAL.Entities.BlogUser", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BlogID")
                         .HasColumnType("int");
 
-                    b.Property<int>("BlogId")
+                    b.Property<int?>("UserID")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "BlogId");
+                    b.HasKey("ID");
 
-                    b.HasIndex("BlogId");
+                    b.HasIndex("BlogID");
 
-                    b.ToTable("BlogUsers");
+                    b.HasIndex("UserID");
+
+                    b.ToTable("BlogAuthors");
                 });
 
             modelBuilder.Entity("GF.DAL.Entities.User", b =>
@@ -102,6 +126,21 @@ namespace GF.DAL.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("BlogUser", b =>
+                {
+                    b.HasOne("GF.DAL.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GF.DAL.Entities.Blog", null)
+                        .WithMany()
+                        .HasForeignKey("BlogsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GF.DAL.Entities.AccessToken", b =>
                 {
                     b.HasOne("GF.DAL.Entities.User", "Creator")
@@ -120,30 +159,16 @@ namespace GF.DAL.Migrations
             modelBuilder.Entity("GF.DAL.Entities.BlogUser", b =>
                 {
                     b.HasOne("GF.DAL.Entities.Blog", "Blog")
-                        .WithMany("Authors")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("BlogID");
 
                     b.HasOne("GF.DAL.Entities.User", "User")
-                        .WithMany("Blogs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UserID");
 
                     b.Navigation("Blog");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("GF.DAL.Entities.Blog", b =>
-                {
-                    b.Navigation("Authors");
-                });
-
-            modelBuilder.Entity("GF.DAL.Entities.User", b =>
-                {
-                    b.Navigation("Blogs");
                 });
 #pragma warning restore 612, 618
         }

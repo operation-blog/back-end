@@ -17,6 +17,8 @@ namespace GC.API.Mappings
 
             CreateMap<AccessToken, TokenResponseDTO>();
             CreateMap<TokenResponseDTO, AccessToken>();
+
+            CreateMap<Blog, BlogResponseDTO>().ForMember(dto => dto.Authors, opt => opt.MapFrom(x => x.Authors.Select(y => y.User).ToList()));
         }
     }
 }
