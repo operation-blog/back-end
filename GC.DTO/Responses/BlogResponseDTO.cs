@@ -11,6 +11,8 @@ namespace GC.DTO.Responses
     {
         public string Title { get; set; }
 
+        public string CreatedDate { get; set; }
+
         public ICollection<UserResponseDTO> Authors { get; set; }
     }
 }

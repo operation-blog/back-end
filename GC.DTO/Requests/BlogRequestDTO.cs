@@ -15,6 +15,11 @@ namespace GC.DTO.Requests
         public string Title { get; set; }
 
         [Required]
+        [MinLength(50)]
+        [MaxLength(10000)]
+        public string Data { get; set; }
+
+        [Required]
         public int[] Authors { get; set; }
     }
 }

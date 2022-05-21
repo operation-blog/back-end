@@ -21,7 +21,6 @@ namespace GF.DAL
                 .WithMany(s => s.Blogs)
                 .HasForeignKey(sc => sc.UserId);
 
-
             builder.Entity<BlogUser>()
                 .HasOne<Blog>(sc => sc.Blog)
                 .WithMany(s => s.Authors)

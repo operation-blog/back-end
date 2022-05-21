@@ -33,7 +33,7 @@ namespace GC.API.Controllers
             if (!blogData.Authors.Contains(user.ID))
                 return BadRequest(new { status = 0, message = "Authors Doesn't Contain Current User" });
 
-            var blog = await _blogService.CreateBlog(blogData.Authors, blogData.Title);
+            var blog = await _blogService.CreateBlog(blogData.Authors, blogData.Title, blogData.Data);
 
             if (blog == null)
                 return BadRequest(new { status = 0, message = "Failed to Create Blog. Most Likely Authors Contained Invalid ID" });

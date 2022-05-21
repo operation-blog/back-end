@@ -25,11 +25,12 @@ namespace GC.BLL.Services
             return await _blogRepository.GetById(id);
         }
 
-        public async Task<Blog> CreateBlog(int[] creators, string title)
+        public async Task<Blog> CreateBlog(int[] creators, string title, string data)
         {
             Blog blog = new Blog();
 
             blog.Title = title;
+            blog.Data = data;
 
             foreach (var creator in creators)
             {

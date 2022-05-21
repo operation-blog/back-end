@@ -11,10 +11,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     private readonly IList<Role> _roles;
 
-    public AuthorizeAttribute(params Role[] roles)
-    {
-        _roles = roles ?? new Role[] { };
-    }
+    public AuthorizeAttribute(params Role[] roles) { _roles = roles ?? new Role[] { }; }
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {

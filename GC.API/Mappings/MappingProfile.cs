@@ -16,7 +16,9 @@ namespace GC.API.Mappings
 
             CreateMap<AccessToken, TokenResponseDTO>();
 
-            CreateMap<Blog, BlogResponseDTO>().ForMember(dto => dto.Authors, opt => opt.MapFrom(x => x.Authors.Select(y => y.User).ToList()));
+            CreateMap<Blog, BlogResponseDTO>()
+                .ForMember(dto => dto.Authors, opt => opt.MapFrom(x => x.Authors.Select(y => y.User).ToList()))
+                .ForMember(date => date.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.ToString("dd/MM/yyyy")));
         }
     }
 }

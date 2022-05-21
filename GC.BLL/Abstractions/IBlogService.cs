@@ -9,7 +9,7 @@ namespace GC.BLL.Abstractions
 {
     public interface IBlogService
     {
-        Task<Blog> CreateBlog(int[] creators, string title);
+        Task<Blog> CreateBlog(int[] creators, string title, string data);
 
         Task<IEnumerable<Blog>> GetAll();
 
