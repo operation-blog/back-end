@@ -36,6 +36,18 @@ namespace GC.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:5000", "http://localhost:5000")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowAnyOrigin();
+                    });
+            });
+
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseSqlServer(Configuration["Database:ConnectionString"]);
@@ -43,11 +55,11 @@ namespace GC.API
             });
 
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IBlogService, BlogService>();
-
             services.AddScoped<IGenericRepository<Blog>, GenericRepository<Blog>>();
             services.AddScoped<IGenericRepository<AccessToken>, GenericRepository<AccessToken>>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IAccessTokenService, AccessTokenService>();
 
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
@@ -97,6 +109,14 @@ namespace GC.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.UseMiddleware<JwtMiddleware>();
 

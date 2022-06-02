@@ -46,11 +46,11 @@ namespace GC.API.Controllers
 
         [Authorize]
         [HttpGet]
-        public UserResponseDTO GetCurrentUser()
+        public IActionResult GetCurrentUser()
         {
             var user = (User)HttpContext.Items["User"];
 
-            return _mapper.Map<UserResponseDTO>(user);
+            return Ok(new { status = 1, data = _mapper.Map<UserResponseDTO>(user) });
         }
 
         [HttpPost("Login")]
