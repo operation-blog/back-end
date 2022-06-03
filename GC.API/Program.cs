@@ -14,7 +14,7 @@ namespace GC.API
     {
         public static async Task Main(string[] args)
         {
-            IWebHost webHost = CreateWebHostBuilder(args).Build();
+            IWebHost webHost = CreateWebHostBuilder(args).UseUrls("http://localhost:44326").Build();
 
             await webHost.RunAsync();
         }
