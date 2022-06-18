@@ -20,6 +20,29 @@ namespace GC.BLL.Services
             _userRepository = userRepository;
         }
 
+        private async Task<bool> UpdateBlogAuthors(Blog blog, int[] authors)
+        {
+            blog.Authors = new List<BlogUser>();
+
+            foreach (var author in authors)
+            {
+                var userToAdd = await _userRepository.GetById(author);
+
+                if (userToAdd == null)
+                    return false;
+
+                var newAuthor = new BlogUser
+                {
+                    User = userToAdd,
+                    Blog = blog
+                };
+
+                blog.Authors.Add(newAuthor);
+            }
+
+            return true;
+        }
+
         public async Task<Blog> GetById(int id)
         {
             return await _blogRepository.GetById(id);
@@ -32,26 +55,29 @@ namespace GC.BLL.Services
             blog.Title = title;
             blog.Data = data;
 
-            foreach (var creator in creators)
-            {
-                var userToAdd = await _userRepository.GetById(creator);
-
-                if (userToAdd == null)
-                    return null;
-
-                var newAuthor = new BlogUser
-                {
-                    User = userToAdd,
-                    Blog = blog
-                };
-
-                blog.Authors.Add(newAuthor);
-            }
+            if (!await UpdateBlogAuthors(blog, creators))
+                return null;
 
             _blogRepository.Insert(blog);
             await _blogRepository.Save();
 
             return blog;
+        }
+
+        public async Task<bool> UpdateBlog(int blogID, int[] creators, string title, string data)
+        {
+            var blog = await GetById(blogID);
+
+            blog.Title = title;
+            blog.Data = data;
+
+            if (!await UpdateBlogAuthors(blog, creators))
+                return false;
+
+            _blogRepository.Update(blog);
+            await _blogRepository.Save();
+
+            return true;
         }
 
         public async Task<IEnumerable<Blog>> GetAll()

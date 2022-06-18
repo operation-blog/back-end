@@ -49,6 +49,39 @@ namespace GC.API.Controllers
             return _mapper.Map<List<BlogResponseDTO>>(blogs);
         }
 
+        [HttpGet("GetDetails")]
+        public async Task<IActionResult> GetDetails(int blogID)
+        {
+            var blog = await _blogService.GetById(blogID);
+
+            if (blog == null)
+                return BadRequest(new { status = 0, message = "Failed To Find Blog" });
+
+            return Ok(new { status = 1, blogData = blog.Data });
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateBlog(int blogID, BlogUpdateRequestDTO blogUpdateData)
+        {
+            var user = (User)HttpContext.Items["User"];
+
+            var blog = await _blogService.GetById(blogID);
+
+            if (blog == null)
+                return BadRequest(new { status = 0, message = "Blog Doesn't Exist" });
+
+            if (!blog.Authors.Select(y => y.UserId).Contains(user.ID))
+                return BadRequest(new { status = 0, message = "Current User Doesn't Own This Blog" });
+
+            if (!blogUpdateData.Authors.Contains(user.ID))
+                return BadRequest(new { status = 0, message = "Current User Is Not Part Of New Authors" });
+
+            if (await _blogService.UpdateBlog(blogID, blogUpdateData.Authors, blogUpdateData.Title, blogUpdateData.Data))
+                return Ok(new { status = 1, message = "Blog Updated" });
+            else
+                return BadRequest(new { status = 0, message = "Failed To Update Blog" });
+        }
+
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int blogID)
         {
