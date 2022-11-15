@@ -21,6 +21,8 @@ using GF.DAL.Repositories;
 using AutoMapper;
 using GC.API.Mappings;
 using GC.API.Middlewares;
+using System.Text;
+using GC.DTO.Responses;
 
 namespace GC.API
 {
@@ -50,7 +52,7 @@ namespace GC.API
 
             services.AddDbContext<DatabaseContext>(options =>
             {
-                options.UseSqlServer(Configuration["Database:ConnectionString"]);
+                options.UseSqlServer(Configuration["ConnectionStrings:ConnectionString"]);
                 options.UseLazyLoadingProxies();
             });
 
@@ -103,6 +105,27 @@ namespace GC.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GC.API v1"));
             }
+             else
+            {
+                app.UseStatusCodePages(async context =>
+                {
+                    var response = context.HttpContext.Response;
+
+                    if (response.StatusCode == 404)
+                    {
+                        var errorMessage = new ErrorResponseDTO
+                        {
+                            Status = 0,
+                            Message = "Invalid Endpoint"
+                        };
+
+                        var responeString = Newtonsoft.Json.JsonConvert.SerializeObject(errorMessage);
+
+                        await response.Body.WriteAsync(Encoding.ASCII.GetBytes(responeString));
+                    }
+                });
+            }
+
 
             app.UseHttpsRedirection();
 
