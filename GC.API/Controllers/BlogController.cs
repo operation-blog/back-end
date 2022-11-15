@@ -11,7 +11,6 @@ using GC.DTO.Requests;
 
 namespace GC.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BlogController : ControllerBase
@@ -24,16 +23,17 @@ namespace GC.API.Controllers
             _blogService = blogService;
             _mapper = mapper;
         }
-        
+
+        [Authorize]
         [HttpPost("Create")]
         public async Task<IActionResult> Create(BlogRequestDTO blogData)
         {
             var user = (User)HttpContext.Items["User"];
 
-            if (!blogData.Authors.Contains(user.ID))
-                return BadRequest(new { status = 0, message = "Authors Doesn't Contain Current User" });
+            if (blogData.Authors.Contains(user.ID))
+                return BadRequest(new { status = 0, message = "Creator Can't be in Authors List" });
 
-            var blog = await _blogService.CreateBlog(blogData.Authors, blogData.Title, blogData.Data);
+            var blog = await _blogService.CreateBlog(user, blogData.Authors, blogData.Title, blogData.Data);
 
             if (blog == null)
                 return BadRequest(new { status = 0, message = "Failed to Create Blog. Most Likely Authors Contained Invalid ID" });
@@ -60,6 +60,7 @@ namespace GC.API.Controllers
             return Ok(new { status = 1, blogData = blog.Data });
         }
 
+        [Authorize]
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateBlog(int blogID, BlogUpdateRequestDTO blogUpdateData)
         {
@@ -70,18 +71,19 @@ namespace GC.API.Controllers
             if (blog == null)
                 return BadRequest(new { status = 0, message = "Blog Doesn't Exist" });
 
-            if (!blog.Authors.Select(y => y.UserId).Contains(user.ID))
+            if (!blog.Authors.Select(y => y.UserId).Contains(user.ID) && blog.OfficialCreator != user)
                 return BadRequest(new { status = 0, message = "Current User Doesn't Own This Blog" });
 
-            if (!blogUpdateData.Authors.Contains(user.ID))
-                return BadRequest(new { status = 0, message = "Current User Is Not Part Of New Authors" });
+            if (blogUpdateData.Authors.Contains(blog.OfficialCreator.ID))
+                return BadRequest(new { status = 0, message = "Creator Can't be in Authors List" });
 
-            if (await _blogService.UpdateBlog(blogID, blogUpdateData.Authors, blogUpdateData.Title, blogUpdateData.Data))
+            if (await _blogService.UpdateBlog(blogID, user, blogUpdateData.Authors, blogUpdateData.Title, blogUpdateData.Data))
                 return Ok(new { status = 1, message = "Blog Updated" });
             else
                 return BadRequest(new { status = 0, message = "Failed To Update Blog" });
         }
 
+        [Authorize]
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int blogID)
         {
@@ -92,7 +94,7 @@ namespace GC.API.Controllers
             if (blog == null)
                 return BadRequest(new { status = 0, message = "Blog Doesn't Exist" });
 
-            if (!blog.Authors.Select(y => y.UserId).Contains(user.ID))
+            if (blog.OfficialCreator != user)
                 return BadRequest(new { status = 0, message = "Current User Doesn't Own This Blog" });
 
             await _blogService.DeleteBlog(blogID);

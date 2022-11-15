@@ -24,16 +24,13 @@ namespace GC.API.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public UserController(IUserService userService, IAccessTokenService tokenService,  IMapper mapper, IConfiguration configuration)
+        public UserController(IUserService userService, IAccessTokenService tokenService, IMapper mapper, IConfiguration configuration)
         {
             _userService = userService;
             _tokenService = tokenService;
             _mapper = mapper;
             _configuration = configuration;
         }
-
-        [HttpGet("Ping")]
-        public string Ping() { return "OK"; }
 
         [Authorize(Role.Admin)]
         [HttpGet("All")]

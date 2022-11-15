@@ -23,7 +23,7 @@ namespace GC.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("Create")]
+        [HttpGet("Token/Create")]
         public async Task<TokenResponseDTO> Create()
         {
             var user = (User)HttpContext.Items["User"];
@@ -33,7 +33,7 @@ namespace GC.API.Controllers
             return _mapper.Map<TokenResponseDTO>(token);
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("Token/GetAll")]
         public async Task<IEnumerable<TokenResponseDTO>> GetAll()
         {
             var tokens = await _tokenService.GetAll();

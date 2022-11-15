@@ -41,7 +41,7 @@ namespace GC.API
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:5000", "http://localhost:5000")
+                        builder.WithOrigins("https://localhost:3000", "http://localhost:3000")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
                                             .AllowAnyOrigin();

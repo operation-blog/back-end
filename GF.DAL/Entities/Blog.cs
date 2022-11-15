@@ -24,6 +24,8 @@ namespace GF.DAL.Entities
         [Column(TypeName = "Date")]
         public DateTime CreatedDate { get; set; }
 
+        public virtual User OfficialCreator { get; set; }
+
         public virtual ICollection<BlogUser> Authors { get; set; }
     }
 }

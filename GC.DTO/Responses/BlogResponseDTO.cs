@@ -13,6 +13,8 @@ namespace GC.DTO.Responses
 
         public string CreatedDate { get; set; }
 
+        public UserResponseDTO OfficialCreator { get; set; }
+
         public ICollection<UserResponseDTO> Authors { get; set; }
     }
 }
