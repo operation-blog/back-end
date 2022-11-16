@@ -23,6 +23,8 @@ using GC.API.Mappings;
 using GC.API.Middlewares;
 using System.Text;
 using GC.DTO.Responses;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace GC.API
 {
@@ -50,6 +52,7 @@ namespace GC.API
                     });
             });
 
+
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:ConnectionString"]);
@@ -70,7 +73,8 @@ namespace GC.API
 
             services.AddSingleton(mapper);
 
-            services.AddControllers();
+            services.AddControllers().ConfigureApiBehaviorOptions(options => { options.InvalidModelStateResponseFactory = actionContext => { return new BadRequestObjectResult(new { status = 0, message = actionContext.ModelState.First().Value.Errors.First().ErrorMessage }); }; });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GC.API", Version = "v1" });
@@ -111,23 +115,30 @@ namespace GC.API
                 {
                     var response = context.HttpContext.Response;
 
+                    ErrorResponseDTO errorMessage = null;
+
                     if (response.StatusCode == 404)
-                    {
-                        var errorMessage = new ErrorResponseDTO
-                        {
-                            Status = 0,
-                            Message = "Invalid Endpoint"
-                        };
+                        errorMessage = new ErrorResponseDTO { Status = 0, Message = "Invalid Endpoint" };
 
-                        var responeString = Newtonsoft.Json.JsonConvert.SerializeObject(errorMessage);
+                    else if (response.StatusCode == 405)
+                        errorMessage = new ErrorResponseDTO { Status = 0, Message = "Invalid Method" };
 
-                        await response.Body.WriteAsync(Encoding.ASCII.GetBytes(responeString));
-                    }
+                    var responeString = Newtonsoft.Json.JsonConvert.SerializeObject(errorMessage);
+
+                    await response.Body.WriteAsync(Encoding.ASCII.GetBytes(responeString));
                 });
             }
 
 
             app.UseHttpsRedirection();
+
+            app.UseExceptionHandler(c => c.Run(async context =>
+            {
+                var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+                var response = new { status = 0, error = exception.Message };
+
+                await context.Response.WriteAsJsonAsync(response);
+            }));
 
             app.UseRouting();
 
