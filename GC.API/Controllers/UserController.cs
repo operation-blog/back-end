@@ -63,7 +63,7 @@ namespace GC.API.Controllers
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.ID.ToString()), new Claim("role", user.Role.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.ID.ToString()), new Claim("role", user.Role.ToString()), new Claim("username", user.Username) }),
 
                 Expires = DateTime.UtcNow.AddDays(1),
 
