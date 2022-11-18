@@ -48,12 +48,13 @@ namespace GC.BLL.Services
             return await _blogRepository.GetById(id);
         }
 
-        public async Task<Blog> CreateBlog(User officialCreator, int[] creators, string title, string data)
+        public async Task<Blog> CreateBlog(User officialCreator, int[] creators, string title, string description, string data)
         {
             Blog blog = new Blog();
 
             blog.OfficialCreator = officialCreator;
             blog.Title = title;
+            blog.Description = description;
             blog.Data = data;
 
             if (!await UpdateBlogAuthors(blog, creators))
@@ -65,12 +66,13 @@ namespace GC.BLL.Services
             return blog;
         }
 
-        public async Task<bool> UpdateBlog(int blogID, User officialCreator, int[] creators, string title, string data)
+        public async Task<bool> UpdateBlog(int blogID, User officialCreator, int[] creators, string title, string description, string data)
         {
             var blog = await GetById(blogID);
 
             blog.OfficialCreator = officialCreator;
             blog.Title = title;
+            blog.Description = description;
             blog.Data = data;
 
             if (!await UpdateBlogAuthors(blog, creators))

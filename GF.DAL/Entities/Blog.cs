@@ -17,6 +17,9 @@ namespace GF.DAL.Entities
         public string Title { get; set; }
 
         [Required]
+        public string Description { get; set; }
+
+        [Required]
         [Column(TypeName = "text")]
         public string Data { get; set; }
 

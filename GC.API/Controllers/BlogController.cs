@@ -33,7 +33,7 @@ namespace GC.API.Controllers
             if (blogData.Authors.Contains(user.ID))
                 return BadRequest(new { status = 0, message = "Creator Can't be in Authors List" });
 
-            var blog = await _blogService.CreateBlog(user, blogData.Authors, blogData.Title, blogData.Data);
+            var blog = await _blogService.CreateBlog(user, blogData.Authors, blogData.Title, blogData.Description, blogData.Data);
 
             if (blog == null)
                 return BadRequest(new { status = 0, message = "Failed to Create Blog. Most Likely Authors Contained Invalid ID" });
@@ -49,6 +49,17 @@ namespace GC.API.Controllers
             return _mapper.Map<List<BlogResponseDTO>>(blogs);
         }
 
+        [HttpGet("{blogId}")]
+        public async Task<IActionResult> GetById([FromRoute] int blogId)
+        {
+            var blog = await _blogService.GetById(blogId);
+
+            if (blog == null)
+                return BadRequest(new { status = 0, message = "Blog Doesn't Exist" });
+
+            return Ok(new { status = 1, data = _mapper.Map<BlogResponseDTO>(blog) });
+        }
+
         [HttpGet("GetDetails")]
         public async Task<IActionResult> GetDetails(int blogID)
         {
@@ -57,7 +68,7 @@ namespace GC.API.Controllers
             if (blog == null)
                 return BadRequest(new { status = 0, message = "Failed To Find Blog" });
 
-            return Ok(new { status = 1, blogData = blog.Data });
+            return Ok(new { status = 1, data = blog.Data });
         }
 
         [Authorize]
@@ -77,7 +88,7 @@ namespace GC.API.Controllers
             if (blogUpdateData.Authors.Contains(blog.OfficialCreator.ID))
                 return BadRequest(new { status = 0, message = "Creator Can't be in Authors List" });
 
-            if (await _blogService.UpdateBlog(blogID, user, blogUpdateData.Authors, blogUpdateData.Title, blogUpdateData.Data))
+            if (await _blogService.UpdateBlog(blogID, user, blogUpdateData.Authors, blogUpdateData.Title, blogUpdateData.Description, blogUpdateData.Data))
                 return Ok(new { status = 1, message = "Blog Updated" });
             else
                 return BadRequest(new { status = 0, message = "Failed To Update Blog" });
