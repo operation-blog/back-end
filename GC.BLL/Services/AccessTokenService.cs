@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GC.BLL.Abstractions;
 using GF.DAL.Abstractions;
 using GF.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GC.BLL.Services
 {
@@ -47,13 +48,9 @@ namespace GC.BLL.Services
 
         public async Task<AccessToken> TokenExist(string token)
         {
-            var tokens = await GetAll();
+            var found = await _accessTokenRepository.Where(e => e.Token == token).Where(e => e.Used == false).FirstOrDefaultAsync();
 
-            foreach (var rToken in tokens)
-                if (rToken.Token == token && rToken.Used == false)
-                    return rToken;
-
-            return null;
+            return found;
         }
 
         public async Task MarkTokenUsed(AccessToken token, User user)

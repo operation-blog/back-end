@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GC.BLL.Abstractions;
 using GF.DAL.Abstractions;
 using GF.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GC.BLL.Services
 {
@@ -30,13 +31,9 @@ namespace GC.BLL.Services
 
         public async Task<bool> UserExist(string username)
         {
-            var users = await GetAll();
+            var user = await _userRepository.Where(e => e.Username == username).FirstOrDefaultAsync();
 
-            foreach (var user in users)
-                if (user.Username == username)
-                    return true;
-
-            return false;
+            return user != null;
         }
 
         public async Task<User> CreateUser(string username, string password)
@@ -48,8 +45,12 @@ namespace GC.BLL.Services
 
             User user = new User();
 
+            var salt = BCrypt.Net.BCrypt.GenerateSalt();
+            var hash = BCrypt.Net.BCrypt.HashPassword(password, salt);
+
             user.Username = username;
-            user.Password = password;
+            user.Password = hash[salt.Length..];
+            user.Salt = salt;
 
             _userRepository.Insert(user);
             await _userRepository.Save();
@@ -59,13 +60,12 @@ namespace GC.BLL.Services
 
         public async Task<User> GetUserByDetails(string username, string password)
         {
-            var users = await GetAll();
+            var user = await _userRepository.Where(e => e.Username == username).FirstOrDefaultAsync();
 
-            foreach (var user in users)
-                if (user.Username == username && user.Password == password)
-                    return user;
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Salt + user.Password))
+                return null;
 
-            return null;
+            return user;
         }
     }
 }
