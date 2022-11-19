@@ -29,6 +29,13 @@ namespace GC.BLL.Services
             return await _userRepository.GetById(id);
         }
 
+        public async Task<User> GetByName(string name)
+        {
+            var user = await _userRepository.Where(e => e.Username == name).FirstOrDefaultAsync();
+
+            return user;
+        }
+
         public async Task<bool> UserExist(string username)
         {
             var user = await _userRepository.Where(e => e.Username == username).FirstOrDefaultAsync();
@@ -60,7 +67,7 @@ namespace GC.BLL.Services
 
         public async Task<User> GetUserByDetails(string username, string password)
         {
-            var user = await _userRepository.Where(e => e.Username == username).FirstOrDefaultAsync();
+            var user = await GetByName(username);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Salt + user.Password))
                 return null;

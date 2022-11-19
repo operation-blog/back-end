@@ -52,6 +52,17 @@ namespace GC.API.Controllers
             return Ok(new { status = 1, data = _mapper.Map<UserResponseDTO>(userResponse) });
         }
 
+        [HttpGet("Name/{userName}")]
+        public async Task<IActionResult> GetUserFromName([FromRoute] string userName)
+        {
+            var userResponse = await _userService.GetByName(userName);
+
+            if (userResponse == null)
+                return BadRequest(new { status = 0, message = "User Doesn't Exist" });
+
+            return Ok(new { status = 1, data = _mapper.Map<UserResponseDTO>(userResponse) });
+        }
+
         [Authorize]
         [HttpGet]
         public IActionResult GetCurrentUser()

@@ -13,6 +13,8 @@ namespace GC.BLL.Abstractions
 
         Task<User> GetById(int id);
 
+        Task<User> GetByName(string name);
+
         Task<bool> UserExist(string username);
 
         Task<User> CreateUser(string username, string password);
