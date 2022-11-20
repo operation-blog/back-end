@@ -60,10 +60,10 @@ namespace GC.API.Controllers
             return Ok(new { status = 1, data = _mapper.Map<BlogResponseDTO>(blog) });
         }
 
-        [HttpGet("GetDetails")]
-        public async Task<IActionResult> GetDetails(int blogID)
+        [HttpGet("Details/{blogId}")]
+        public async Task<IActionResult> GetDetails([FromRoute] int blogId)
         {
-            var blog = await _blogService.GetById(blogID);
+            var blog = await _blogService.GetById(blogId);
 
             if (blog == null)
                 return BadRequest(new { status = 0, message = "Failed To Find Blog" });
