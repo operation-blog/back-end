@@ -64,6 +64,20 @@ namespace GC.API.Controllers
         }
 
         [Authorize]
+        [HttpPost("Update")]
+        public async Task<IActionResult> UpdateCurrentUser([FromBody] UserUpdateRequestDTO registerData)
+        {
+            var user = (User)HttpContext.Items["User"];
+
+            var result = await _userService.UpdateUser(user, registerData.Username, registerData.Picture);
+
+            if (result)
+                return Ok(new { status = 1, message = "User Updated" });
+            else
+                return BadRequest(new { status = 0, message = "Username Already Exist" });
+        }
+
+        [Authorize]
         [HttpGet]
         public IActionResult GetCurrentUser()
         {

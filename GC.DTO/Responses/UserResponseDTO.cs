@@ -11,6 +11,8 @@ namespace GC.DTO.Responses
     {
         public string Username { get; set; }
 
+        public string Picture { get; set; }
+
         public Role Role { get; set; }
     }
 }

@@ -7,18 +7,8 @@ using System.Threading.Tasks;
 
 namespace GC.DTO.Requests
 {
-    public class UserRegisterRequestDTO
+    public class UserRegisterRequestDTO : UserRequestDTO
     {
-        [Required]
-        [MinLength(3)]
-        [MaxLength(15)]
-        public string Username { get; set; }
-
-        [Required]
-        [MinLength(5)]
-        [MaxLength(15)]
-        public string Password { get; set; }
-
         [Required]
         public string Token { get; set; }
     }

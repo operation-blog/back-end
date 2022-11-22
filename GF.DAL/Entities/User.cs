@@ -19,6 +19,8 @@ namespace GF.DAL.Entities
         [Required]
         public string Salt { get; set; }
 
+        public string Picture { get; set; }
+
         [DefaultValue(Role.User)]
         public Role Role { get; set; }
 

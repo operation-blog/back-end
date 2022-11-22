@@ -12,6 +12,8 @@ namespace GC.BLL.Services
 {
     public class UserService : IUserService
     {
+        private const string DEFAULT_PICTURE = "https://cdn.discordapp.com/attachments/802255885204193330/1044611339601051669/unknown.png";
+
         private IGenericRepository<User> _userRepository = null;
 
         public UserService(IGenericRepository<User> userRepository)
@@ -36,6 +38,22 @@ namespace GC.BLL.Services
             return user;
         }
 
+        public async Task<bool> UpdateUser(User user, string username, string picture)
+        {
+            var nameExist = await UserExist(username);
+
+            if (nameExist && username != user.Username)
+                return false;
+
+            user.Username = username;
+            user.Picture = picture;
+
+            _userRepository.Update(user);
+            await _userRepository.Save();
+
+            return true;
+        }
+
         public async Task<bool> UserExist(string username)
         {
             var user = await _userRepository.Where(e => e.Username == username).FirstOrDefaultAsync();
@@ -58,6 +76,8 @@ namespace GC.BLL.Services
             user.Username = username;
             user.Password = hash[salt.Length..];
             user.Salt = salt;
+
+            user.Picture = DEFAULT_PICTURE;
 
             _userRepository.Insert(user);
             await _userRepository.Save();
