@@ -12,7 +12,8 @@ namespace GC.API.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<User, UserResponseDTO>();
+            CreateMap<User, UserResponseDTO>()
+                .ForMember(user => user.RegisterDate, opt => opt.MapFrom(src => src.CreatedDate.ToString("dd/MM/yyyy")));
 
             CreateMap<AccessToken, TokenResponseDTO>();
 

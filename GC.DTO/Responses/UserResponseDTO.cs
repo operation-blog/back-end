@@ -13,6 +13,8 @@ namespace GC.DTO.Responses
 
         public string Picture { get; set; }
 
+        public string RegisterDate { get; set; }
+
         public Role Role { get; set; }
     }
 }

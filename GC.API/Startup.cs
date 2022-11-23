@@ -123,7 +123,10 @@ namespace GC.API
                     else if (response.StatusCode == 405)
                         errorMessage = new ErrorResponseDTO { Status = 0, Message = "Invalid Method" };
 
-                    var responeString = Newtonsoft.Json.JsonConvert.SerializeObject(errorMessage);
+                    var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings();
+                    serializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+
+                    var responeString = Newtonsoft.Json.JsonConvert.SerializeObject(errorMessage, serializerSettings);
 
                     await response.Body.WriteAsync(Encoding.ASCII.GetBytes(responeString));
                 });
@@ -135,7 +138,7 @@ namespace GC.API
             app.UseExceptionHandler(c => c.Run(async context =>
             {
                 var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
-                var response = new { status = 0, error = exception.Message };
+                var response = new { status = 0, message = "Internal Server Error" };
 
                 await context.Response.WriteAsJsonAsync(response);
             }));
