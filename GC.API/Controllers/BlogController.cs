@@ -71,6 +71,28 @@ namespace GC.API.Controllers
             return Ok(new { status = 1, data = blog.Data });
         }
 
+        [HttpGet("BlogsCount/{userId}")]
+        public async Task<IActionResult> GetUserBlogsCount([FromRoute] int userId)
+        {
+            var blogCount = await _blogService.GetUserBlogCount(userId);
+
+            if (blogCount == -1)
+                return BadRequest(new { status = 0, message = "Invalid User" });
+
+            return Ok(new { status = 1, data = blogCount });
+        }
+
+        [HttpGet("Blogs/{userId}")]
+        public async Task<IActionResult> GetUserBlogs([FromRoute] int userId)
+        {
+            var blogs = await _blogService.GetUserBlogs(userId);
+
+            if (blogs == null)
+                return BadRequest(new { status = 0, message = "Invalid User" });
+
+            return Ok(new { status = 1, data = _mapper.Map<List<BlogResponseDTO>>(blogs) });
+        }
+
         [Authorize]
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateBlog(int blogID, BlogUpdateRequestDTO blogUpdateData)

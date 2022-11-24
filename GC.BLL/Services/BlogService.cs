@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GC.BLL.Abstractions;
 using GF.DAL.Abstractions;
 using GF.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GC.BLL.Services
 {
@@ -41,6 +42,26 @@ namespace GC.BLL.Services
             }
 
             return true;
+        }
+
+        public async Task<int> GetUserBlogCount(int userID)
+        {
+            var user = await _userRepository.GetById(userID);
+
+            if (user == null)
+                return -1;
+
+           return await _blogRepository.Where(e => e.OfficialCreator.ID == user.ID).CountAsync();
+        }
+
+        public async Task<List<Blog>> GetUserBlogs(int userID)
+        {
+            var user = await _userRepository.GetById(userID);
+
+            if (user == null)
+                return null;
+
+            return await _blogRepository.Where(e => e.OfficialCreator.ID == user.ID).ToListAsync();
         }
 
         public async Task<Blog> GetById(int id)

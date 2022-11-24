@@ -18,5 +18,9 @@ namespace GC.BLL.Abstractions
         Task<bool> UpdateBlog(int blogID, User officialCreator, int[] creators, string title, string description, string data);
 
         Task<Blog> GetById(int id);
+
+        Task<int> GetUserBlogCount(int userID);
+
+        Task<List<Blog>> GetUserBlogs(int userID);
     }
 }

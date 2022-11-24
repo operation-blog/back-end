@@ -21,6 +21,11 @@ namespace GF.DAL.Repositories
             table = _context.Set<T>();
         }
 
+        public async Task<int> GetCount()
+        {
+            return await table.CountAsync();
+        }
+
         public async Task<IEnumerable<T>> GetAll()
         {
             return await table.ToListAsync();
