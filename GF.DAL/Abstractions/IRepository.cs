@@ -13,9 +13,13 @@ namespace GF.DAL.Abstractions
 
         Task<T> GetById(object id);
 
-        Task<int> GetCount();
+        Task<int> GetCountFromQueryable(IQueryable<T> queryable);
 
-        IQueryable<T> Where(Expression<Func<T, bool>> predicate);
+        Task<T> GetFirstFromQueryable(IQueryable<T> queryable);
+
+        Task<List<T>> GetAllFromQueryable(IQueryable<T> queryable);
+
+        IQueryable<T> GetQueryable();
 
         void Insert(T obj);
 

@@ -21,9 +21,19 @@ namespace GF.DAL.Repositories
             table = _context.Set<T>();
         }
 
-        public async Task<int> GetCount()
+        public async Task<int> GetCountFromQueryable(IQueryable<T> queryable)
         {
-            return await table.CountAsync();
+            return await queryable.CountAsync();
+        }
+
+        public async Task<T> GetFirstFromQueryable(IQueryable<T> queryable)
+        {
+            return await queryable.FirstOrDefaultAsync();
+        }
+
+        public async Task<List<T>> GetAllFromQueryable(IQueryable<T> queryable)
+        {
+            return await queryable.ToListAsync();
         }
 
         public async Task<IEnumerable<T>> GetAll()
@@ -36,9 +46,9 @@ namespace GF.DAL.Repositories
             return await table.FindAsync(id);
         }
 
-        public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
+        public IQueryable<T> GetQueryable()
         {
-            return table.Where(predicate);
+            return table.AsQueryable<T>();
         }
 
         public void Insert(T obj)

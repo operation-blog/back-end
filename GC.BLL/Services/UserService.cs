@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GC.BLL.Abstractions;
 using GF.DAL.Abstractions;
 using GF.DAL.Entities;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace GC.BLL.Services
 {
@@ -33,7 +33,7 @@ namespace GC.BLL.Services
 
         public async Task<User> GetByName(string name)
         {
-            var user = await _userRepository.Where(e => e.Username == name).FirstOrDefaultAsync();
+            var user = await _userRepository.GetFirstFromQueryable(_userRepository.GetQueryable().Where(e => e.Username == name));
 
             return user;
         }
@@ -56,7 +56,7 @@ namespace GC.BLL.Services
 
         public async Task<bool> UserExist(string username)
         {
-            var user = await _userRepository.Where(e => e.Username == username).FirstOrDefaultAsync();
+            var user = await _userRepository.GetFirstFromQueryable(_userRepository.GetQueryable().Where(e => e.Username == username));
 
             return user != null;
         }

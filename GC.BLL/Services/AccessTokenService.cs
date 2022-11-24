@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using GC.BLL.Abstractions;
 using GF.DAL.Abstractions;
 using GF.DAL.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace GC.BLL.Services
 {
@@ -48,7 +47,7 @@ namespace GC.BLL.Services
 
         public async Task<AccessToken> TokenExist(string token)
         {
-            var found = await _accessTokenRepository.Where(e => e.Token == token).Where(e => e.Used == false).FirstOrDefaultAsync();
+            var found = await _accessTokenRepository.GetFirstFromQueryable(_accessTokenRepository.GetQueryable().Where(e => e.Token == token).Where(e => e.Used == false));
 
             return found;
         }
