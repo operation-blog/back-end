@@ -11,7 +11,7 @@ namespace GC.BLL.Abstractions
     {
         Task<Blog> CreateBlog(User officialCreator, int[] creators, string title, string description, string data);
 
-        Task<IEnumerable<Blog>> GetAll();
+        Task<IEnumerable<Blog>> GetAll(int lastId = 0);
 
         Task DeleteBlog(int blogID);
 

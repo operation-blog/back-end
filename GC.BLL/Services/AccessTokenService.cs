@@ -40,9 +40,9 @@ namespace GC.BLL.Services
             return token;
         }
 
-        public async Task<IEnumerable<AccessToken>> GetAll()
+        public async Task<IEnumerable<AccessToken>> GetAll(int lastId)
         {
-            return await _accessTokenRepository.GetAll();
+            return await _accessTokenRepository.GetAll(lastId);
         }
 
         public async Task<AccessToken> TokenExist(string token)

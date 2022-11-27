@@ -11,7 +11,7 @@ namespace GC.BLL.Abstractions
     {
         Task<AccessToken> CreateToken(User Creator);
 
-        Task<IEnumerable<AccessToken>> GetAll();
+        Task<IEnumerable<AccessToken>> GetAll(int lastId = 0);
 
         Task<AccessToken> TokenExist(string token);
 

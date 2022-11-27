@@ -104,9 +104,9 @@ namespace GC.BLL.Services
             return true;
         }
 
-        public async Task<IEnumerable<Blog>> GetAll()
+        public async Task<IEnumerable<Blog>> GetAll(int lastId)
         {
-            return await _blogRepository.GetAll();
+            return await _blogRepository.GetAll(lastId);
         }
 
         public async Task DeleteBlog(int blogID)

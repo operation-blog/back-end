@@ -33,10 +33,10 @@ namespace GC.API.Controllers
         }
 
         [Authorize(Role.Admin)]
-        [HttpGet("All")]
-        public async Task<IEnumerable<UserResponseDTO>> GetAll()
+        [HttpGet("All/{lastId?}")]
+        public async Task<IEnumerable<UserResponseDTO>> GetAll([FromRoute] int? lastId = null)
         {
-            var userResponse = await _userService.GetAll();
+            var userResponse = await _userService.GetAll(lastId.HasValue ? lastId.Value : 0);
 
             return _mapper.Map<List<UserResponseDTO>>(userResponse);
         }

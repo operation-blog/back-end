@@ -21,9 +21,9 @@ namespace GC.BLL.Services
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>> GetAll(int lastId)
         {
-            return await _userRepository.GetAll();
+            return await _userRepository.GetAll(lastId);
         }
 
         public async Task<User> GetById(int id)

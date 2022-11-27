@@ -33,10 +33,11 @@ namespace GC.API.Controllers
             return _mapper.Map<TokenResponseDTO>(token);
         }
 
-        [HttpGet("Token/GetAll")]
-        public async Task<IEnumerable<TokenResponseDTO>> GetAll()
+
+        [HttpGet("Token/GetAll/{lastId?}")]
+        public async Task<IEnumerable<TokenResponseDTO>> GetAll([FromRoute] int? lastId = null)
         {
-            var tokens = await _tokenService.GetAll();
+            var tokens = await _tokenService.GetAll(lastId.HasValue ? lastId.Value : 0);
 
             return _mapper.Map<List<TokenResponseDTO>>(tokens);
         }

@@ -41,10 +41,11 @@ namespace GC.API.Controllers
             return Ok(new { status = 1, message = "Blog Created" });
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IEnumerable<BlogResponseDTO>> GetAll()
+
+        [HttpGet("GetAll/{lastId?}")]
+        public async Task<IEnumerable<BlogResponseDTO>> GetAll([FromRoute] int? lastId = null)
         {
-            var blogs = await _blogService.GetAll();
+            var blogs = await _blogService.GetAll(lastId.HasValue ? lastId.Value : 0);
 
             return _mapper.Map<List<BlogResponseDTO>>(blogs);
         }

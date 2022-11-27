@@ -9,7 +9,7 @@ namespace GC.BLL.Abstractions
 {
     public interface IUserService
     {
-        Task<IEnumerable<User>> GetAll();
+        Task<IEnumerable<User>> GetAll(int lastId = 0);
 
         Task<User> GetById(int id);
 

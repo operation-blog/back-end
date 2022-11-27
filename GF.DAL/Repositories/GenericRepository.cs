@@ -1,4 +1,5 @@
 ﻿using GF.DAL.Abstractions;
+using GF.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GF.DAL.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private DatabaseContext _context = null;
 
@@ -36,9 +37,9 @@ namespace GF.DAL.Repositories
             return await queryable.ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<IEnumerable<T>> GetAll(int lastId)
         {
-            return await table.ToListAsync();
+            return await table.OrderBy(e => e.ID).Where(e => e.ID > lastId).Take(12).ToListAsync();
         }
 
         public async Task<T> GetById(object id)

@@ -25,6 +25,7 @@ using System.Text;
 using GC.DTO.Responses;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using GC.API.Filters;
 
 namespace GC.API
 {
@@ -77,6 +78,8 @@ namespace GC.API
 
             services.AddSwaggerGen(c =>
             {
+                c.OperationFilter<OptionalFilter>();
+
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GC.API", Version = "v1" });
 
                 var securitySchema = new OpenApiSecurityScheme
@@ -131,7 +134,6 @@ namespace GC.API
                     await response.Body.WriteAsync(Encoding.ASCII.GetBytes(responeString));
                 });
             }
-
 
             app.UseHttpsRedirection();
 
