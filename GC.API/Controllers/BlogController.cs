@@ -50,6 +50,14 @@ namespace GC.API.Controllers
             return _mapper.Map<List<BlogResponseDTO>>(blogs);
         }
 
+        [HttpGet("Count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _blogService.GetBlogsCount();
+
+            return Ok(new { status = 1, data = count });
+        }
+
         [HttpGet("{blogId}")]
         public async Task<IActionResult> GetById([FromRoute] int blogId)
         {

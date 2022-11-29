@@ -26,6 +26,11 @@ namespace GC.BLL.Services
             return await _userRepository.GetAll(lastId);
         }
 
+        public async Task<int> GetUsersCount()
+        {
+            return await _userRepository.GetCount();
+        }
+
         public async Task<User> GetById(int id)
         {
             return await _userRepository.GetById(id);

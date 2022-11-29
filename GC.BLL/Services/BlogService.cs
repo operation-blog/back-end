@@ -109,6 +109,11 @@ namespace GC.BLL.Services
             return await _blogRepository.GetAll(lastId);
         }
 
+        public async Task<int> GetBlogsCount()
+        {
+            return await _blogRepository.GetCount();
+        }
+
         public async Task DeleteBlog(int blogID)
         {
             var blog = await GetById(blogID);

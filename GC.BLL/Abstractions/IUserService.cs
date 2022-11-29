@@ -11,6 +11,8 @@ namespace GC.BLL.Abstractions
     {
         Task<IEnumerable<User>> GetAll(int lastId = 0);
 
+        Task<int> GetUsersCount();
+
         Task<User> GetById(int id);
 
         Task<User> GetByName(string name);

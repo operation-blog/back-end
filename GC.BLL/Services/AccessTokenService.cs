@@ -45,6 +45,11 @@ namespace GC.BLL.Services
             return await _accessTokenRepository.GetAll(lastId);
         }
 
+        public async Task<int> GetTokensCount()
+        {
+            return await _accessTokenRepository.GetCount();
+        }
+
         public async Task<AccessToken> TokenExist(string token)
         {
             var found = await _accessTokenRepository.GetFirstFromQueryable(_accessTokenRepository.GetQueryable().Where(e => e.Token == token).Where(e => e.Used == false));

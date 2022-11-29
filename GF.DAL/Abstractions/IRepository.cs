@@ -22,6 +22,8 @@ namespace GF.DAL.Abstractions
 
         IQueryable<T> GetQueryable();
 
+        Task<int> GetCount();
+
         void Insert(T obj);
 
         void Update(T obj);

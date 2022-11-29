@@ -41,6 +41,15 @@ namespace GC.API.Controllers
             return _mapper.Map<List<UserResponseDTO>>(userResponse);
         }
 
+        [Authorize(Role.Admin)]
+        [HttpGet("Count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _userService.GetUsersCount();
+
+            return Ok(new { status = 1, data = count });
+        }
+
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetById([FromRoute] int userId)
         {

@@ -13,6 +13,8 @@ namespace GC.BLL.Abstractions
 
         Task<IEnumerable<AccessToken>> GetAll(int lastId = 0);
 
+        Task<int> GetTokensCount();
+
         Task<AccessToken> TokenExist(string token);
 
         Task MarkTokenUsed(AccessToken token, User user);

@@ -41,5 +41,13 @@ namespace GC.API.Controllers
 
             return _mapper.Map<List<TokenResponseDTO>>(tokens);
         }
+
+        [HttpGet("Count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _tokenService.GetTokensCount();
+
+            return Ok(new { status = 1, data = count });
+        }
     }
 }

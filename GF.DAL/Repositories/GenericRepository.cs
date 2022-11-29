@@ -42,6 +42,11 @@ namespace GF.DAL.Repositories
             return await table.OrderBy(e => e.ID).Where(e => e.ID > lastId).Take(12).ToListAsync();
         }
 
+        public async Task<int> GetCount()
+        {
+            return await table.CountAsync();
+        }
+
         public async Task<T> GetById(object id)
         {
             return await table.FindAsync(id);

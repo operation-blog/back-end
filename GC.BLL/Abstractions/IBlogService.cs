@@ -13,6 +13,8 @@ namespace GC.BLL.Abstractions
 
         Task<IEnumerable<Blog>> GetAll(int lastId = 0);
 
+        Task<int> GetBlogsCount();
+
         Task DeleteBlog(int blogID);
 
         Task<bool> UpdateBlog(int blogID, User officialCreator, int[] creators, string title, string description, string data);
