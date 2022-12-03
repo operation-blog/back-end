@@ -86,11 +86,10 @@ namespace GC.BLL.Services
             return blog;
         }
 
-        public async Task<bool> UpdateBlog(int blogID, User officialCreator, int[] creators, string title, string description, string data)
+        public async Task<bool> UpdateBlog(int blogID, int[] creators, string title, string description, string data)
         {
             var blog = await GetById(blogID);
 
-            blog.OfficialCreator = officialCreator;
             blog.Title = title;
             blog.Description = description;
             blog.Data = data;

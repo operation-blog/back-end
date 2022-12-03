@@ -119,7 +119,7 @@ namespace GC.API.Controllers
             if (blogUpdateData.Authors.Contains(blog.OfficialCreator.ID))
                 return BadRequest(new { status = 0, message = "Creator Can't be in Authors List" });
 
-            if (await _blogService.UpdateBlog(blogID, user, blogUpdateData.Authors, blogUpdateData.Title, blogUpdateData.Description, blogUpdateData.Data))
+            if (await _blogService.UpdateBlog(blogID, blogUpdateData.Authors, blogUpdateData.Title, blogUpdateData.Description, blogUpdateData.Data))
                 return Ok(new { status = 1, message = "Blog Updated" });
             else
                 return BadRequest(new { status = 0, message = "Failed To Update Blog" });
