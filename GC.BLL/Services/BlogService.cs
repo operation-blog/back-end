@@ -53,14 +53,19 @@ namespace GC.BLL.Services
            return await _blogRepository.GetCountFromQueryable(_blogRepository.GetQueryable().Where(e => e.OfficialCreator.ID == user.ID));
         }
 
-        public async Task<List<Blog>> GetUserBlogs(int userID)
+        public async Task<List<Blog>> GetUserBlogs(int userID, int lastId = 0)
         {
             var user = await _userRepository.GetById(userID);
 
             if (user == null)
                 return null;
 
-            return await _blogRepository.GetAllFromQueryable(_blogRepository.GetQueryable().Where(e => e.OfficialCreator.ID == user.ID));
+            return await _blogRepository
+                .GetAllFromQueryable(_blogRepository.GetQueryable()
+                .OrderBy(e => e.ID)
+                .Where(e => e.OfficialCreator.ID == user.ID)
+                .Where(e => e.ID > lastId)
+                .Take(12));
         }
 
         public async Task<Blog> GetById(int id)

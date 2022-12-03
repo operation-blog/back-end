@@ -23,6 +23,6 @@ namespace GC.BLL.Abstractions
 
         Task<int> GetUserBlogCount(int userID);
 
-        Task<List<Blog>> GetUserBlogs(int userID);
+        Task<List<Blog>> GetUserBlogs(int userID, int lastId = 0);
     }
 }

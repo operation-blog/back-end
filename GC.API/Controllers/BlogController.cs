@@ -91,10 +91,10 @@ namespace GC.API.Controllers
             return Ok(new { status = 1, data = blogCount });
         }
 
-        [HttpGet("Blogs/{userId}")]
-        public async Task<IActionResult> GetUserBlogs([FromRoute] int userId)
+        [HttpGet("Blogs/{userId}/{lastId?}")]
+        public async Task<IActionResult> GetUserBlogs([FromRoute] int userId, int? lastId = null)
         {
-            var blogs = await _blogService.GetUserBlogs(userId);
+            var blogs = await _blogService.GetUserBlogs(userId, lastId.HasValue ? lastId.Value : 0);
 
             if (blogs == null)
                 return BadRequest(new { status = 0, message = "Invalid User" });
