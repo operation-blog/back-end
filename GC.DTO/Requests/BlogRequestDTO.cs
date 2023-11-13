@@ -11,17 +11,17 @@ namespace GC.DTO.Requests
     {
         [Required]
         [MinLength(3)]
-        [MaxLength(30)]
+        [MaxLength(50)]
         public string Title { get; set; }
 
         [Required]
         [MinLength(50)]
-        [MaxLength(10000)]
+        [MaxLength(50000)]
         public string Data { get; set; }
 
         [Required]
         [MinLength(10)]
-        [MaxLength(100)]
+        [MaxLength(150)]
         public string Description { get; set; }
 
         [Required]
